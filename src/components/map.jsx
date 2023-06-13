@@ -4,16 +4,42 @@ import GoogleMapReact from "google-map-react";
 
 import { googleMapsAPIKey } from "../config";
 
+import MyMarker from "./myMarker";
+
 import "./styles/map.css";
 
 const Map = () => {
-	const [location, setLocation] = useState({ lat: 6.316404739437572, lng: 80.84195002143753 });
-	const [zoom, setZoom] = useState(13);
+	const [response, setResponse] = useState([]);
+	const [location, setLocation] = useState({ lat: 0, lng: 0 });
+	const [zoom, setZoom] = useState(15);
+
+	const distanceToMouse = (pt, mp) => {
+		if (pt && mp) {
+			return Math.sqrt((pt.x - mp.x) * (pt.x - mp.x) + (pt.y - mp.y) * (pt.y - mp.y));
+		}
+	};
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const response = await axios.get("https://api.driversafe.tharindu.dev/locations");
+
+				const threshold = 0.0004; // Adjust the threshold as per your requirement
+
+				const filteredData = response.data.filter((item, index, array) => {
+					if (index === 0) return true; // Keep the first element
+
+					const previousItem = array[index - 1];
+
+					// Calculate the absolute difference between latitudes and longitudes
+					const latDiff = Math.abs(item.lat - previousItem.lat);
+					const lngDiff = Math.abs(item.lng - previousItem.lng);
+
+					// Check if the difference exceeds the threshold
+					return latDiff > threshold || lngDiff > threshold;
+				});
+
+				setResponse(filteredData);
 
 				setLocation({
 					lat: response.data[0].lat,
@@ -24,17 +50,12 @@ const Map = () => {
 			}
 		};
 
-		fetchData();
-	}, []);
+		const interval = setInterval(() => {
+			fetchData();
+		}, 3000);
 
-	const Marker = (props) => {
-		return (
-			<React.Fragment>
-				<div className="pin"></div>
-				<div className="pulse"></div>
-			</React.Fragment>
-		);
-	};
+		return () => clearInterval(interval);
+	}, []);
 
 	return (
 		<React.Fragment>
@@ -44,8 +65,11 @@ const Map = () => {
 						bootstrapURLKeys={{ key: googleMapsAPIKey }}
 						center={location}
 						defaultZoom={zoom}
+						distanceToMouse={distanceToMouse}
 					>
-						<Marker lat={location["lat"]} lng={location["lng"]} />
+						{response.map(({ lat, lng, _id, time }) => {
+							return <MyMarker key={_id} lat={lat} lng={lng} tooltip={time} />;
+						})}
 					</GoogleMapReact>
 				</div>
 			</div>
