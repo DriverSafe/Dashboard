@@ -1,19 +1,39 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import GoogleMapReact from "google-map-react";
 
 import { googleMapsAPIKey } from "../config";
 
 import "./styles/map.css";
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
-
 const Map = () => {
-	const defaultProps = {
-		center: {
-			lat: 7.640970334275281,
-			lng: 80.69530538778625,
-		},
-		zoom: 8,
+	const [location, setLocation] = useState({ lat: 6.316404739437572, lng: 80.84195002143753 });
+	const [zoom, setZoom] = useState(13);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await axios.get("https://api.driversafe.tharindu.dev/locations");
+
+				setLocation({
+					lat: response.data[0].lat,
+					lng: response.data[0].lng,
+				});
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		fetchData();
+	}, []);
+
+	const Marker = (props) => {
+		return (
+			<React.Fragment>
+				<div className="pin"></div>
+				<div className="pulse"></div>
+			</React.Fragment>
+		);
 	};
 
 	return (
@@ -22,10 +42,10 @@ const Map = () => {
 				<div className="map-container">
 					<GoogleMapReact
 						bootstrapURLKeys={{ key: googleMapsAPIKey }}
-						defaultCenter={defaultProps.center}
-						defaultZoom={defaultProps.zoom}
+						center={location}
+						defaultZoom={zoom}
 					>
-						<AnyReactComponent lat={59.955413} lng={30.337844} text="My Marker" />
+						<Marker lat={location["lat"]} lng={location["lng"]} />
 					</GoogleMapReact>
 				</div>
 			</div>
