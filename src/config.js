@@ -1,0 +1,3 @@
+const googleMapsAPIKey = "";
+
+export { googleMapsAPIKey };

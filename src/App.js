@@ -2,6 +2,7 @@ import React from "react";
 
 import "./App.css";
 import Map from "./components/map";
+import VehicleState from "./components/vehicleState";
 
 function App() {
 	return (
@@ -16,7 +17,7 @@ function App() {
 				<div className="App-container">
 					<div className="App-container-left">
 						<div className="left-container">
-							<h1>Right</h1>
+							<VehicleState />
 						</div>
 					</div>
 					<div className="App-container-right">

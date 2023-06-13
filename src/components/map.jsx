@@ -1,6 +1,8 @@
 import React from "react";
 import GoogleMapReact from "google-map-react";
 
+import { googleMapsAPIKey } from "../config";
+
 import "./styles/map.css";
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
@@ -19,7 +21,7 @@ const Map = () => {
 			<div className="map">
 				<div className="map-container">
 					<GoogleMapReact
-						bootstrapURLKeys={{ key: "AIzaSyBctrjc9ZzT2d5EFqBGWgd5d-FBI4sIhg4" }}
+						bootstrapURLKeys={{ key: googleMapsAPIKey }}
 						defaultCenter={defaultProps.center}
 						defaultZoom={defaultProps.zoom}
 					>
