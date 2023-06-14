@@ -114,17 +114,17 @@ const VehicleState = () => {
 		<React.Fragment>
 			<div className="vehicle-state-container">
 				<div className="vehicle-state">
-					<h1>Status 🚗</h1>
+					<p class="centered-text">Vehicle State</p>
 					<div className="vehicle-state-image">
 						<img src={stateImage} alt="state" />
 					</div>
-					<p>Last Update: {lastUpdate}</p>
-					<p>State: {state}</p>
-					<p>Speed: {speed}</p>
+					<p class="centered-text-state">Last Update: {lastUpdate}</p>
+					<p class="centered-text-state">State: {state}</p>
+					<p class="centered-text-state">Speed: {speed}</p>
 				</div>
 
 				<div className="vehicle-state-table">
-					<table className="table table-sm table-light">
+					<table className="table table-sm table-dark">
 						<thead>
 							<tr>
 								<th scope="col">#</th>
@@ -135,7 +135,7 @@ const VehicleState = () => {
 						</thead>
 						<tbody className="table-body">
 							{uniqueStates &&
-								uniqueStates.slice(0, 50).map((data, index) => (
+								uniqueStates.slice(0, 8).map((data, index) => (
 									<tr
 										className={
 											data.state === "Accidented"

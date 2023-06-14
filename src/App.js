@@ -10,7 +10,7 @@ function App() {
 			<div className="App">
 				<nav className="navbar navbar-dark bg-dark">
 					<a className="navbar-brand" href="#">
-						DriverSafe
+						<img className="logo" src="/static/images/logo.png" width="165" height="15" />
 					</a>
 				</nav>
 

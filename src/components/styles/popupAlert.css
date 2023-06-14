@@ -12,7 +12,7 @@
 }
 
 .popup-content {
-	background-color: white;
+	background-color: #666666;
 	width: 400px;
 	padding: 20px;
 	border-radius: 4px;
@@ -26,4 +26,13 @@
 .popup-buttons {
 	display: flex;
 	justify-content: space-between;
+}
+
+p {
+	color: rgb(219, 219, 219);
+}
+
+h2 {
+	color: white;
+	text-align: center;
 }

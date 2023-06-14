@@ -1,6 +1,8 @@
+/* Base styles */
 .App {
 	height: 100vh;
 	width: 100vw;
+	background-color: #333333;
 }
 
 .navbar {
@@ -24,7 +26,7 @@
 
 .App-container-left {
 	flex: 1;
-	overflow-y: scroll;
+	/* overflow-y: scroll; */
 	padding: 20px;
 }
 
@@ -46,4 +48,22 @@
 .right-container > .map-container {
 	height: 100%;
 	width: 100%;
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+	/* Mobile styles */
+	.App-container {
+		flex-direction: column;
+	}
+
+	.App-container-left {
+		padding: 10px;
+		overflow-y: scroll;
+		padding-bottom: 80%;
+	}
+
+	.App-container-right {
+		flex: 2;
+	}
 }
