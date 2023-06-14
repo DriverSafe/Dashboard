@@ -12,6 +12,8 @@ const VehicleState = () => {
 	const [uniqueStates, setUniqueStates] = useState([]);
 	const [lastUpdate, setLastUpdate] = useState(null);
 
+	const [stateImage, setStateImage] = useState("/static/images/unknown.jpg");
+
 	const [popupTitle, setPopupTitle] = useState(null);
 	const [popupMessage, setPopupMessage] = useState(null);
 	const [popupType, setPopupType] = useState(null);
@@ -46,14 +48,19 @@ const VehicleState = () => {
 
 				if (response.data[0].state === "Driving") {
 					setState("Driving 🚗");
+					setStateImage("/static/images/driving.gif");
 				} else if (response.data[0].state === "Breaked") {
 					setState("Breaked 🛑");
+					setStateImage("/static/images/breaking_3.jpg");
 				} else if (response.data[0].state === "Parking") {
 					setState("Parked 🅿️");
+					setStateImage("/static/images/breaking_3.jpg");
 				} else if (response.data[0].state === "Stopped") {
 					setState("Stopped 🅿️");
+					setStateImage("/static/images/breaking_3.jpg");
 				} else if (response.data[0].state === "Accidented") {
 					setState("Accidented 💥");
+					setStateImage("/static/images/accident.jpg");
 					setPopupTitle("Accidented!!");
 					setPopupMessage(
 						"Accidented!! An unexpected incident has occurred, causing disruption and requiring immediate attention."
@@ -62,19 +69,22 @@ const VehicleState = () => {
 					setShowPopup(true);
 				} else if (response.data[0].state === "Unknown") {
 					setState("Unknown 🤷‍♂️");
+					setStateImage("/static/images/unknown.jpg");
 				} else {
 					setState("Unknown 🤷‍♂️");
+					setStateImage("/static/images/unknown.jpg");
 				}
 
 				setSpeed(response.data[0].speed);
 			} catch (error) {
 				console.error(error);
+				setStateImage("/static/images/unknown.jpg");
 			}
 		};
 
 		fetchData();
 
-		const interval = setInterval(fetchData, 500);
+		const interval = setInterval(fetchData, 200);
 		return () => clearInterval(interval);
 	}, []);
 
@@ -91,6 +101,7 @@ const VehicleState = () => {
 		const timeDifference1 = currentTime - time1;
 
 		if (timeDifference1 > 6000) {
+			setStateImage("/static/images/unknown.jpg");
 			setState("Unknown 🤷‍♂️");
 		}
 
@@ -104,6 +115,9 @@ const VehicleState = () => {
 			<div className="vehicle-state-container">
 				<div className="vehicle-state">
 					<h1>Status 🚗</h1>
+					<div className="vehicle-state-image">
+						<img src={stateImage} alt="state" />
+					</div>
 					<p>Last Update: {lastUpdate}</p>
 					<p>State: {state}</p>
 					<p>Speed: {speed}</p>
