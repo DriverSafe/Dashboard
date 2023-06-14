@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+import Popup from "./popupAlert";
+
 import "./styles/vehicleState.css";
 
 const VehicleState = () => {
@@ -10,18 +12,31 @@ const VehicleState = () => {
 	const [uniqueStates, setUniqueStates] = useState([]);
 	const [lastUpdate, setLastUpdate] = useState(null);
 
+	const [popupTitle, setPopupTitle] = useState(null);
+	const [popupMessage, setPopupMessage] = useState(null);
+	const [popupType, setPopupType] = useState(null);
+	const [showPopup, setShowPopup] = useState(false);
+
+	const handlePopup = () => {
+		if (showPopup) {
+			setShowPopup(false);
+		} else {
+			setShowPopup(true);
+		}
+	};
+
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const response = await axios.get("https://api.driversafe.tharindu.dev/states");
 				setResponseData(response.data);
 
-				let uniqueStates = [];
+				let uniqueStates = [response.data[0]];
 				let previousState = response.data[0];
 				response.data.forEach((data) => {
 					if (data.state !== previousState.state) {
-						previousState = data;
 						uniqueStates.push(data);
+						previousState = data;
 					}
 				});
 
@@ -39,6 +54,12 @@ const VehicleState = () => {
 					setState("Stopped 🅿️");
 				} else if (response.data[0].state === "Accidented") {
 					setState("Accidented 💥");
+					setPopupTitle("Accidented!!");
+					setPopupMessage(
+						"Accidented!! An unexpected incident has occurred, causing disruption and requiring immediate attention."
+					);
+					setPopupType("accident");
+					setShowPopup(true);
 				} else if (response.data[0].state === "Unknown") {
 					setState("Unknown 🤷‍♂️");
 				} else {
@@ -53,7 +74,7 @@ const VehicleState = () => {
 
 		fetchData();
 
-		const interval = setInterval(fetchData, 2000);
+		const interval = setInterval(fetchData, 500);
 		return () => clearInterval(interval);
 	}, []);
 
@@ -121,6 +142,9 @@ const VehicleState = () => {
 					</table>
 				</div>
 			</div>
+			{showPopup && (
+				<Popup onClose={handlePopup} title={popupTitle} message={popupMessage} type={popupType} />
+			)}
 		</React.Fragment>
 	);
 };
