@@ -11,6 +11,7 @@ const VehicleState = () => {
 	const [responseData, setResponseData] = useState(null);
 	const [uniqueStates, setUniqueStates] = useState([]);
 	const [lastUpdate, setLastUpdate] = useState(null);
+	const [showSpeed, setShowSpeed] = useState(true);
 
 	const [stateImage, setStateImage] = useState("/static/images/unknown.jpg");
 
@@ -49,36 +50,55 @@ const VehicleState = () => {
 				if (response.data[0].state === "Driving") {
 					setState("Driving 🚗");
 					setStateImage("/static/images/driving.gif");
+					setSpeed(50);
+					setShowSpeed(true);
 				} else if (response.data[0].state === "Breaked") {
 					setState("Breaked 🛑");
 					setStateImage("/static/images/breaking_3.jpg");
+					setSpeed(20);
+					setShowSpeed(false);
 				} else if (response.data[0].state === "Parking") {
 					setState("Parked 🅿️");
 					setStateImage("/static/images/breaking_3.jpg");
+					setSpeed(0);
+					setShowSpeed(false);
 				} else if (response.data[0].state === "Stopped") {
+					setSpeed(0);
 					setState("Stopped 🅿️");
 					setStateImage("/static/images/breaking_3.jpg");
+					setShowSpeed(false);
 				} else if (response.data[0].state === "Accidented") {
 					setState("Accidented 💥");
 					setStateImage("/static/images/accident.jpg");
 					setPopupTitle("Accidented!!");
+					setShowSpeed(false);
+					setSpeed(0);
 					setPopupMessage(
 						"Accidented!! An unexpected incident has occurred, causing disruption and requiring immediate attention."
 					);
 					setPopupType("accident");
 					setShowPopup(true);
+				} else if (response.data[0].state === "Fire") {
+					setState("Fire 🔥");
+					setStateImage("/static/images/accident.jpg");
+					setPopupTitle("Fire!!");
+					setShowSpeed(false);
+					setPopupMessage(
+						"Fire!! An alarming situation has arisen as flames engulf the area, posing a serious threat. Immediate action is required to ensure safety and minimize damage."
+					);
 				} else if (response.data[0].state === "Unknown") {
 					setState("Unknown 🤷‍♂️");
+					setShowSpeed(false);
 					setStateImage("/static/images/unknown.jpg");
 				} else {
 					setState("Unknown 🤷‍♂️");
 					setStateImage("/static/images/unknown.jpg");
+					setShowSpeed(false);
 				}
-
-				setSpeed(response.data[0].speed);
 			} catch (error) {
 				console.error(error);
 				setStateImage("/static/images/unknown.jpg");
+				setShowSpeed(false);
 			}
 		};
 
@@ -100,7 +120,7 @@ const VehicleState = () => {
 
 		const timeDifference1 = currentTime - time1;
 
-		if (timeDifference1 > 6000) {
+		if (timeDifference1 > 120000) {
 			setStateImage("/static/images/unknown.jpg");
 			setState("Unknown 🤷‍♂️");
 		}
@@ -120,7 +140,7 @@ const VehicleState = () => {
 					</div>
 					<p class="centered-text-state">Last Update: {lastUpdate}</p>
 					<p class="centered-text-state">State: {state}</p>
-					<p class="centered-text-state">Speed: {speed}</p>
+					{showSpeed && <p class="centered-text-state">Speed: {speed}KM/h</p>}
 				</div>
 
 				<div className="vehicle-state-table">
